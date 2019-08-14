@@ -1,8 +1,5 @@
 package com.example.game;
 
-import java.util.Arrays;
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -15,6 +12,10 @@ public class Main {
 
         while(board.hasBoardMoves()) {
             if (board.checkWin("X")) {
+                // MAI DINAMIC
+                // cele 2 sunt foarte asemanatoare si pot face o metoda care sa aiba parametrii pentru x=>System.out.println("Ai castigat. Jocul s-a incheiat!");
+                //                                                                                                                                y => System.out.println("Ai pierdut. Jocul s-a incheiat!");
+                // ca si parametrul ch pentru checkWin()
                 System.out.println("------------------------------------------------");
                 System.out.println("Ai castigat. Jocul s-a incheiat!");
                 isPlayerTurn = false;
@@ -24,6 +25,7 @@ public class Main {
                 System.out.println("Ai pierdut. Jocul s-a incheiat!");
                 isPlayerTurn = false;
                 break;
+//                ------------------------------------------------------------------------------------------------------------------------------------------------------
             }
             else {
                 if (isPlayerTurn) {
