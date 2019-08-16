@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Board {
-    // de modificat array-ul sa nu fie cu 4 randuri si 4 coloane
     private String[] [] boardArray = {
             {"@", "@", "@"},
             {"@", "@", "@"},
@@ -13,24 +12,15 @@ public class Board {
 
     private  boolean hasValue;
 
-    // nu am nevoie de
-    // ------------------------------------------------------------------------------------------
-    private int row;
-    private int column;
-
-    // inutil
-    public Board(int row, int column) {
-        this.row = row;
-        this.column = column;
+    public Board() {
+        this.boardArray = boardArray;
     }
 
-    // -----------------------------------------------------------------------------------------
+    boolean hasBoardMoves() {
 
-    public boolean hasBoardMoves() {
-
-        for (int i = 0; i < boardArray.length; i++) {
+        for (String[] strings : boardArray) {
             for (int j = 0; j < boardArray.length; j++) {
-                if (boardArray[i][j].contains("@")) {
+                if (strings[j].contains("@")) {
                     this.hasValue = true;
                     return hasValue;
                 } else {
@@ -41,7 +31,7 @@ public class Board {
         return this.hasValue;
     }
 
-    public void computerTurn() {
+    void computerTurn() {
         while (hasBoardMoves()) {
             int randomRow = (int) ((Math.random() * 3));
             int randomColumn = (int) ((Math.random() * 3));
@@ -58,22 +48,21 @@ public class Board {
         }
     }
 
-    public void playerTurn() {
+    void playerTurn() {
         Scanner scanner = new Scanner(System.in);
-
+        int row;
+        int column;
         do {
-            String position[] = scanner.nextLine().split(", ");
+            String[] position = scanner.nextLine().split(", ");
 
-            // putem folosi local variable in loc de setRow si setColumn
-
-            this.row = Integer.parseInt(position[0]) -1;
-            this.column = Integer.parseInt(position[1]) -1;
+            row = Integer.parseInt(position[0]) -1;
+            column = Integer.parseInt(position[1]) -1;
 
             // ------------------------------------------------------------------------------------
-            if (boardArray[row][column] != "@") {
+            if (!boardArray[row][column].equals("@")) {
                 System.out.println("\nPozitia a fost deja ocupata! Introduceti o noua pozitie:");
             }
-        } while (boardArray[row][column] != "@");
+        } while (!boardArray[row][column].equals("@"));
 
         boardArray[row][column] = "X";
         printBoard();
@@ -81,24 +70,23 @@ public class Board {
 
     public boolean checkWin(String ch) {
 
-        // DE DEFACUT CU METODE PENTRU checkRow(), checkColumn, checkDiag()
-        // de facut un if care sa verifice metodele cu OR ||
         // pentru diag 2 de folosit o metoda matematica
 
-        if (  (boardArray[0][0 ] == ch && boardArray[0][1] == ch && boardArray[0][2] == ch) || // row 1
-                (boardArray[1][0] == ch && boardArray[1][1] == ch && boardArray[1][2] == ch) || // row 2
-                (boardArray[2][0] == ch && boardArray[2][1] == ch && boardArray[2][2] == ch) || // row 3
-                (boardArray[0][0] == ch && boardArray[1][0] == ch && boardArray[2][0] == ch) || // col 1
-                (boardArray[0][1] == ch && boardArray[1][1] == ch && boardArray[2][1] == ch) || // col 2
-                (boardArray[0][2] == ch && boardArray[1][2] == ch && boardArray[2][2] == ch) || // col 3
-                (boardArray[0][0] == ch && boardArray[1][1] == ch && boardArray[2][2] == ch) || // diag  1
-                (boardArray[0][2] == ch && boardArray[1][1] == ch && boardArray[2][0] == ch)) // diag    2
-        {
-            return true;
-        }
-        else { return false; }
+//        if (  (boardArray[0][0 ] == ch && boardArray[0][1] == ch && boardArray[0][2] == ch) || // row 1
+//                (boardArray[1][0] == ch && boardArray[1][1] == ch && boardArray[1][2] == ch) || // row 2
+//                (boardArray[2][0] == ch && boardArray[2][1] == ch && boardArray[2][2] == ch) || // row 3
+//                (boardArray[0][0] == ch && boardArray[1][0] == ch && boardArray[2][0] == ch) || // col 1
+//                (boardArray[0][1] == ch && boardArray[1][1] == ch && boardArray[2][1] == ch) || // col 2
+//                (boardArray[0][2] == ch && boardArray[1][2] == ch && boardArray[2][2] == ch) || // col 3
+//                (boardArray[0][0] == ch && boardArray[1][1] == ch && boardArray[2][2] == ch) || // diag  1
+//                (boardArray[0][2] == ch && boardArray[1][1] == ch && boardArray[2][0] == ch)) // diag    2
+//        {
+//            return true;
+//        }
+//        else { return false; }
+        return checkRow(ch) || checkColumn(ch) || checkDiagonalOne(ch);
     }
-    public void printBoard() {
+    private void printBoard() {
         for (String[] item : boardArray) {
             System.out.println(Arrays.deepToString(item)
                     .replace('[', ' ')
@@ -107,32 +95,88 @@ public class Board {
             );
         }
     }
-    //  public boolean checkRow(String ch) {
-//        for (int i = 0; i < boardArray.length; i++) {
-//
-//
-//
-//            for (int j = 0; j < boardArray.length; j++) {
-//                if (boardArray[i][j].contains("@")) {
-//
-//                    return hasValue;
-//                } else {
-//
+
+    private boolean checkRow(String ch) {
+        boolean isWinner = false;
+        for (int i = 0; i < 3; i++) {
+            if (boardArray[i][0].contains(ch) && boardArray[i][1].contains(ch) && boardArray[i][2].contains(ch)) {
+                isWinner = true;
+                break;
+            }
+        }
+        return isWinner;
+    }
+
+    private boolean checkColumn(String ch) {
+        boolean isWinner = false;
+        int total = 0;
+        for (int i = 0; i < 3; i++) {
+//            for (int j =0; j < 3; j++) {
+//                if (boardArray[j][i].contains(ch)) {
+//                    total++;
+//                    if (total == 3) {
+//                        isWinner = true;
+//                        break;
+//                    }
 //                }
 //            }
-//        }
+            if (boardArray[0][i].contains(ch) && boardArray[1][i].contains(ch) && boardArray[2][i].contains(ch)) {
+                isWinner = true;
+                break;
+            }
+        }
+        return isWinner;
+    }
 
-//        for (int i = 0; i < boardArray.length; i++) {
-//            if (!boardArray[column][i].equals(ch)) {
+    private boolean checkDiagonalOne(String ch) {
+        boolean isWinner = false;
+        int n = 0;
+        if (boardArray[n][n].contains(ch) && boardArray[n+1][n+1].contains(ch) && boardArray[n+2][n+2].contains(ch)){
+            isWinner = true;
+        }
+        return isWinner;
+    }
+
+    private boolean checkDiagonalTwo(String ch) {
+        boolean isWinner = false;
+        int check = 0;
+//  APP CRASH
+        for (int i = 0; i < boardArray.length; i++) {
+            for (int j = 0; j < boardArray.length; j++) {
+                if (boardArray[i][j-i-1].contains(ch)) {
+                    check++;
+                    if (check == 3) {
+                        isWinner = true;
+                    }
+                }
+            }
+        }
+        return isWinner;
+
+//        for (int i =0; i < boardArray.length; i++) {
+//            for (int n = 0; n < boardArray.length; n++) {
+//                if (boardArray[i][n-i-1].contains(ch)) {
+//                    check++;
+//                    if (check == 3) {
+//                        isWinner = true;
+//                    }
+//                }
+//            }
+//      }
+//            System.out.println(boardArray[i][n-i+1]);
+
+//            for (String[] strings : boardArray) {
+//                for (int j = 0; j < boardArray.length; j++) {
+//                    if (strings[j].contains("@")) {
+//                        this.hasValue = true;
+//                        return hasValue;
+//                    } else {
+//                        this.hasValue = false;
+//                    }
+//                }
+//            }
+//            return this.hasValue;
 //
-//            }
-//        }
-//        int a = boardArray[0].length;
-//        for (int i = 0; i < boardArray.length; i++) {
-//            if (boardArray[i].equals(ch)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+//        return isWinner;
+    }
 }
