@@ -2,34 +2,16 @@ package com.example.game;
 
 public class Main {
 
+    private static Board board = new Board();
+
     public static void main(String[] args) {
-        boolean isPlayerTurn = true;
 
         System.out.println("Bine ai venit la X-0; Introdu prima pozitie");
-
-
-        Board board = new Board(0, 0);
-
+        boolean isPlayerTurn = true;
         while(board.hasBoardMoves()) {
-            if (board.checkWin("X")) {
-                // MAI DINAMIC
-                // cele 2 sunt foarte asemanatoare si pot face o metoda care sa aiba parametrii pentru x=>System.out.println("Ai castigat. Jocul s-a incheiat!");
-                //                                                                                                                                y => System.out.println("Ai pierdut. Jocul s-a incheiat!");
-                // ca si parametrul ch pentru checkWin()
-                System.out.println("------------------------------------------------");
-                System.out.println("Ai castigat. Jocul s-a incheiat!");
-                isPlayerTurn = false;
-                break;
-            } else if (board.checkWin("0")) {
-                System.out.println("------------------------------------------------");
-                System.out.println("Ai pierdut. Jocul s-a incheiat!");
-                isPlayerTurn = false;
-                break;
-//                ------------------------------------------------------------------------------------------------------------------------------------------------------
-            }
-            else {
+            String printMessage = isPlayerWinner();
+            if (printMessage == null) {
                 if (isPlayerTurn) {
-
                     board.playerTurn();
                     isPlayerTurn = false;
                 } else {
@@ -38,12 +20,27 @@ public class Main {
                     System.out.println("Introdu o noua pozitie");
                     isPlayerTurn = true;
                 }
+                continue;
+            } else {
+                System.out.println("------------------------------------------------");
+                System.out.println(printMessage);
             }
+            break;
         };
 
-        if (!board.hasBoardMoves()) {
+        if (!board.hasBoardMoves() && (!board.checkWin("X") || !board.checkWin("0"))) {
             System.out.println("------------------------------------------------");
             System.out.println("Remiza. Jocul s-a incheiat!");
+        }
+    }
+
+    private static String isPlayerWinner() {
+        if (board.checkWin("X")) {
+            return "Ai castigat. Jocul s-a incheiat!";
+        } else if (board.checkWin("0")){
+            return "Ai pierdut. Jocul s-a incheiat!";
+        } else {
+            return null;
         }
     }
 }
