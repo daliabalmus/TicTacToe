@@ -9,7 +9,7 @@ public class Main {
         System.out.println("Bine ai venit la X-0; Introdu prima pozitie");
         boolean isPlayerTurn = true;
         while(board.hasBoardMoves()) {
-            String printMessage = isPlayerWinner();
+            String printMessage = printWinner();
             if (printMessage == null) {
                 if (isPlayerTurn) {
                     board.playerTurn();
@@ -34,7 +34,7 @@ public class Main {
         }
     }
 
-    private static String isPlayerWinner() {
+    private static String printWinner() {
         if (board.checkWin("X")) {
             return "Ai castigat. Jocul s-a incheiat!";
         } else if (board.checkWin("0")){
